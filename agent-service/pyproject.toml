@@ -1,0 +1,43 @@
+[project]
+name = "agent-service"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "bcrypt>=5.0.0",
+    "fastapi>=0.141.1",
+    "psycopg[binary]>=3.3.5",
+    "pydantic-settings>=2.15.0",
+    "pydantic[email]>=2.13.5",
+    "pyjwt>=2.14.0",
+    "redis>=8.1.0",
+    "slowapi>=0.1.10",
+    "sqlalchemy>=2.0.52",
+    "uvicorn>=0.52.4",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "mypy>=2.3.1",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "python-dotenv>=1.2.3",
+    "testcontainers[postgres]>=4.15.0",
+]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+plugins = ["pydantic.mypy"]
+files = ["app"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.coverage.run]
+data_file = ".coverage_data/.coverage"
+omit = [
+    "tests/*",
+    ".venv/*",
+]
