@@ -1,0 +1,4 @@
+# Tests and mypy cache
+.coverage_data
+.pytest_cache
+.mypy_cache
