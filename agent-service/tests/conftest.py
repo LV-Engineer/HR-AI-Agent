@@ -2,6 +2,7 @@ from typing import Generator
 import os
 from pathlib import Path
 
+os.environ.setdefault('DATABASE_URL', 'postgresql+psycopg://placeholder:placeholder@localhost:5432/placeholder')
 os.environ.setdefault('REDIS_URL', 'memory://')
 os.environ.setdefault('COMPANY_EMAIL_DOMAIN', 'hirelume.dev')
 os.environ.setdefault('JWT_SECRET_KEY', 'test-secret-key-not-for-production')
