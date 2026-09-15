@@ -1,9 +1,17 @@
+from typing import TypedDict, cast
+
 from sqlalchemy import text
 
 from app.core.db import engine
 
+class MatchResult(TypedDict):
+    candidate_name: str | None
+    cv_content: str | None
+    vacancy_title: str
+    vacancy_content: str
+    distance: float
 
-def match_candidate(cv_id: str, job_requirement_id: int) -> dict:
+def match_candidate(cv_id: str, job_requirement_id: int) -> MatchResult:
     sql = text("""
         SELECT
             cv.candidate_name,
@@ -20,4 +28,4 @@ def match_candidate(cv_id: str, job_requirement_id: int) -> dict:
     if row is None:
         raise ValueError('CV or job requirement not found')
 
-    return dict(row)
+    return cast(MatchResult, dict(row))
