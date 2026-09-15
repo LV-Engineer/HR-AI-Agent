@@ -1,9 +1,11 @@
 import os
 from pathlib import Path
 from typing import Generator
+import tempfile
 
 os.environ.setdefault('DATABASE_URL', 'postgresql+psycopg://placeholder:placeholder@localhost:5432/placeholder')
 os.environ.setdefault('OLLAMA_URL', 'http://placeholder:11434')
+os.environ.setdefault('REPORTS_DIR', tempfile.mkdtemp())
 
 import pytest
 from sqlalchemy import create_engine, text
