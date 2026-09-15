@@ -9,6 +9,7 @@ os.environ.setdefault('JWT_SECRET_KEY', 'test-secret-key-not-for-production')
 os.environ.setdefault('JWT_ALGORITHM', 'HS256')
 os.environ.setdefault('ACCESS_TOKEN_EXPIRE_MINUTES', '30')
 os.environ.setdefault('REFRESH_TOKEN_EXPIRE_DAYS', '30')
+os.environ.setdefault('ANTHROPIC_API_KEY', 'test-key-not-used')
 
 TEST_EMAIL = 'test.user@hirelume.dev'
 TEST_PASSWORD = 'password123'
@@ -24,6 +25,11 @@ from app.main import app
 from app.core.rate_limit import limiter
 
 INIT_DIR = Path(__file__).resolve().parents[2] / 'db' / 'init'
+
+def _login(client, email, password):
+    response = client.post('/auth/login', json={'email': email, 'password': password})
+    assert response.status_code == 200
+    return response.json()
 
 @pytest.fixture(scope='session')
 def postgres_url() -> Generator[str, None, None]:

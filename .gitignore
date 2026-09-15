@@ -11,3 +11,7 @@ wheels/
 
 # Variable environments
 .env
+
+# Generated reports
+storage/reports/*
+!storage/reports/.gitkeep
