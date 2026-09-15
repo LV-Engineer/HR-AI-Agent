@@ -9,6 +9,7 @@ os.environ.setdefault('JWT_SECRET_KEY', 'test-secret-key-not-for-production')
 os.environ.setdefault('JWT_ALGORITHM', 'HS256')
 os.environ.setdefault('ACCESS_TOKEN_EXPIRE_MINUTES', '30')
 os.environ.setdefault('REFRESH_TOKEN_EXPIRE_DAYS', '30')
+os.environ.setdefault('ANTHROPIC_API_KEY', 'test-key-not-used')
 
 TEST_EMAIL = 'test.user@hirelume.dev'
 TEST_PASSWORD = 'password123'
