@@ -1,4 +1,5 @@
 import re
+from typing import Any
 
 from sqlalchemy import create_engine, text
 
@@ -10,7 +11,7 @@ ALLOWED_SCHEMAS = ('staff', 'documents')
 MAX_ROWS = 200
 
 
-def get_schema_info() -> dict:
+def get_schema_info() -> dict[str, Any]:
     query = text("""
         SELECT table_schema, table_name, column_name,
                CASE WHEN data_type = 'USER-DEFINED' THEN udt_name ELSE data_type END AS type,
@@ -19,7 +20,7 @@ def get_schema_info() -> dict:
         WHERE table_schema = ANY(:schemas)
         ORDER BY table_schema, table_name, ordinal_position
     """)
-    result: dict = {}
+    result: dict[str, Any] = {}
     with engine.connect() as conn:
         rows = conn.execute(query, {'schemas': list(ALLOWED_SCHEMAS)})
         for schema, table, column, col_type, is_nullable in rows:
@@ -40,7 +41,7 @@ def _validate_select_only(sql: str) -> str:
     return stripped
 
 
-def run_query(sql: str) -> list[dict]:
+def run_query(sql: str) -> list[dict[str, Any]]:
     validated = _validate_select_only(sql)
     wrapped = f'SELECT * FROM ({validated}) AS subquery LIMIT {MAX_ROWS}'
     with engine.connect() as conn:

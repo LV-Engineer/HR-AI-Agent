@@ -33,6 +33,7 @@ services:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     volumes:
       - ./agent-service/app:/app/app
+      - ./storage/reports:/app/storage/reports
     command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - '8000:8000'
@@ -52,6 +53,8 @@ services:
       DATABASE_URL: postgresql+psycopg://${MCP_DB_USER}:${MCP_DB_PASSWORD}@postgres:5432/${POSTGRES_DB}
     volumes:
       - ./mcp-server/app:/app/app
+      - ./mcp-server/tests:/app/tests
+      - ./storage/reports:/app/storage/reports
     command: uv run uvicorn app.server:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - '8001:8000'
