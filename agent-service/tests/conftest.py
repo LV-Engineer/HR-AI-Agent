@@ -26,6 +26,11 @@ from app.core.rate_limit import limiter
 
 INIT_DIR = Path(__file__).resolve().parents[2] / 'db' / 'init'
 
+def _login(client, email, password):
+    response = client.post('/auth/login', json={'email': email, 'password': password})
+    assert response.status_code == 200
+    return response.json()
+
 @pytest.fixture(scope='session')
 def postgres_url() -> Generator[str, None, None]:
     with PostgresContainer('pgvector/pgvector:pg16', username='test', password='test', dbname='test') as container:

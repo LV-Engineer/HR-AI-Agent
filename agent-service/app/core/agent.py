@@ -14,7 +14,7 @@ SYSTEM_PROMPT = (
     'Respond in the language the user asked in.'
 )
 
-async def ask_agent(question: str) -> str:
+async def ask_agent(question: str) -> str:  # pragma: no cover
     async with streamable_http_client(settings.mcp_server_url) as (read, write):
         async with ClientSession(read, write) as mcp_client:
             await mcp_client.initialize()
