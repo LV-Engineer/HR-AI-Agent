@@ -18,4 +18,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int
     refresh_token_expire_days: int
 
+    anthropic_api_key: str
+    mcp_server_url: str = 'http://mcp-server:8000/mcp'
+
 settings = Settings()
