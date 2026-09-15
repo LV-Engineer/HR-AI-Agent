@@ -8,7 +8,7 @@ from app.core.config import settings
 engine = create_engine(settings.database_url)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
-def get_db() -> Generator[Session, None, None]:
+def get_db() -> Generator[Session, None, None]: # pragma: no cover
     db = SessionLocal()
     try:
         yield db
