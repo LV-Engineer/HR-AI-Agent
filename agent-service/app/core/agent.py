@@ -1,4 +1,4 @@
-from typing import Any, AsyncIterator
+from typing import Any, AsyncIterator, cast
 
 from anthropic import AsyncAnthropic
 from anthropic.lib.tools.mcp import async_mcp_tool
@@ -30,7 +30,7 @@ async def ask_agent(messages: list[dict[str, str]]) -> AsyncIterator[dict[str, A
                 model='claude-sonnet-5',
                 max_tokens=4096,
                 system=SYSTEM_PROMPT, 
-                messages=messages,
+                messages=cast(Any, messages),
                 tools=[async_mcp_tool(t, mcp_client) for t in tools_result.tools]
             )
 

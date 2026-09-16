@@ -1,3 +1,4 @@
+from typing import AsyncIterator
 import json
 import uuid
 from datetime import datetime, timezone
@@ -51,7 +52,7 @@ async def query(
     conversation_id = conversation.id    
     db.commit()
 
-    async def event_stream():
+    async def event_stream() -> AsyncIterator[str]:
         final_answer = ''
         async for event in ask_agent(messages):
             if event['type'] == 'answer':
