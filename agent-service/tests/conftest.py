@@ -1,5 +1,7 @@
 from typing import Generator
+import io
 import os
+import tempfile
 from pathlib import Path
 
 os.environ.setdefault('DATABASE_URL', 'postgresql+psycopg://placeholder:placeholder@localhost:5432/placeholder')
@@ -10,11 +12,13 @@ os.environ.setdefault('JWT_ALGORITHM', 'HS256')
 os.environ.setdefault('ACCESS_TOKEN_EXPIRE_MINUTES', '30')
 os.environ.setdefault('REFRESH_TOKEN_EXPIRE_DAYS', '30')
 os.environ.setdefault('ANTHROPIC_API_KEY', 'test-key-not-used')
+os.environ.setdefault('CV_STORAGE_DIR', tempfile.mkdtemp())
 
 TEST_EMAIL = 'test.user@hirelume.dev'
 TEST_PASSWORD = 'password123'
 
 import pytest
+from pypdf import PdfWriter
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
@@ -30,6 +34,13 @@ def _login(client, email, password):
     response = client.post('/auth/login', json={'email': email, 'password': password})
     assert response.status_code == 200
     return response.json()
+
+def _sample_pdf_bytes() -> bytes:
+    writer = PdfWriter()
+    writer.add_blank_page(width=200, height=200)
+    buffer = io.BytesIO()
+    writer.write(buffer)
+    return buffer.getvalue()
 
 @pytest.fixture(scope='session')
 def postgres_url() -> Generator[str, None, None]:

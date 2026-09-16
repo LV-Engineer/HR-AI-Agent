@@ -21,4 +21,8 @@ class Settings(BaseSettings):
     anthropic_api_key: str
     mcp_server_url: str = 'http://mcp-server:8000/mcp'
 
+    ollama_url: str = 'http://ollama:11434'
+    embedding_model: str = 'bge-m3'
+    cv_storage_dir: str = '/app/storage/cv'
+
 settings = Settings()

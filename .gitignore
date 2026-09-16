@@ -15,3 +15,7 @@ wheels/
 # Generated reports
 storage/reports/*
 !storage/reports/.gitkeep
+
+# Candidate CVs
+storage/cv/*
+!storage/cv/.gitkeep
