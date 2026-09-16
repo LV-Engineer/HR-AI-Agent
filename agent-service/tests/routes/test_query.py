@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import text
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.api.routes import query as query_module
+from app.services import conversation as conversation_service_module
 from app.core.db import get_db
 from app.main import app
 from tests.conftest import _login
@@ -16,7 +16,7 @@ TEST_PASSWORD = 'password123'
 
 @pytest.fixture
 def real_client(engine, monkeypatch: pytest.MonkeyPatch) -> Generator[TestClient, None, None]:
-    monkeypatch.setattr(query_module, 'SessionLocal', sessionmaker(bind=engine))
+    monkeypatch.setattr(conversation_service_module, 'SessionLocal', sessionmaker(bind=engine))
 
     with Session(engine) as session:
         session.execute(
@@ -53,7 +53,7 @@ def _parse_sse_events(body: str) -> list[dict]:
 class TestQuery:
     def test_streams_step_and_answer_events(self, real_client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
         tokens = _login(real_client, TEST_EMAIL, TEST_PASSWORD)
-        monkeypatch.setattr(query_module, 'ask_agent', _fake_ask_agent)
+        monkeypatch.setattr(conversation_service_module, 'ask_agent', _fake_ask_agent)
 
         response = real_client.post(
             '/query',
@@ -74,7 +74,7 @@ class TestQuery:
         self, real_client: TestClient, engine, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         tokens = _login(real_client, TEST_EMAIL, TEST_PASSWORD)
-        monkeypatch.setattr(query_module, 'ask_agent', _fake_ask_agent)
+        monkeypatch.setattr(conversation_service_module, 'ask_agent', _fake_ask_agent)
 
         response = real_client.post(
             '/query',
@@ -105,7 +105,7 @@ class TestQuery:
             answer = 'First answer.' if len(calls) == 1 else 'Second answer.'
             yield {'type': 'answer', 'content': answer}
 
-        monkeypatch.setattr(query_module, 'ask_agent', _recording_ask_agent)
+        monkeypatch.setattr(conversation_service_module, 'ask_agent', _recording_ask_agent)
 
         first = real_client.post('/query', json={'question': 'First question?'}, headers=headers)
         conversation_id = _parse_sse_events(first.text)[0]['conversation_id']

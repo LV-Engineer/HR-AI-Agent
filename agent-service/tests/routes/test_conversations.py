@@ -6,7 +6,6 @@ from app.models.conversation import Conversation
 from app.models.message import Message
 from tests.conftest import _login
 
-
 class TestListConversations:
     def test_returns_only_own_conversations_newest_first(self, client, test_user, db_session) -> None:
         email, password = test_user
