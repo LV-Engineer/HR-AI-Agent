@@ -1,7 +1,7 @@
+import uuid
+
 from pydantic import BaseModel
 
 class QueryRequest(BaseModel):
     question: str
-
-class QueryResponse(BaseModel):
-    answer: str
+    conversation_id: uuid.UUID | None = None
