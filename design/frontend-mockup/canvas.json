@@ -1,0 +1,18 @@
+{
+  "artboards": [
+    { "file": "Login.dc.html", "x": 0, "y": 0, "w": 1440, "h": 900, "page": "final" },
+    { "file": "Main.dc.html", "x": 1540, "y": 0, "w": 1440, "h": 900, "page": "final" },
+    { "file": "DirectionA.dc.html", "x": 0, "y": 0, "w": 1440, "h": 900, "title": "A — Structured Enterprise", "page": "explorations" },
+    { "file": "DirectionC.dc.html", "x": 1540, "y": 0, "w": 1440, "h": 900, "title": "C — Data Console", "page": "explorations" }
+  ],
+  "pages": [
+    { "id": "final", "name": "Final" },
+    { "id": "explorations", "name": "Explorations" }
+  ],
+  "annotations": [
+    { "id": "note-login", "x": 0, "y": -80, "w": 300, "text": "Login", "page": "final" },
+    { "id": "note-chat", "x": 1540, "y": -80, "w": 300, "text": "Chat — with conversation history sidebar", "page": "final" },
+    { "id": "note-explore", "x": 0, "y": -110, "w": 500, "text": "Unchosen directions, kept for reference.", "page": "explorations" }
+  ],
+  "launch": { "view": "canvas", "page": "final" }
+}
