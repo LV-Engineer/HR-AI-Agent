@@ -4,12 +4,7 @@ from sqlalchemy import select, text
 
 from app.core.security import hash_refresh_token
 from app.models.refresh_token import RefreshToken
-
-
-def _login(client, email, password):
-    response = client.post('/auth/login', json={'email': email, 'password': password})
-    assert response.status_code == 200
-    return response.json()
+from tests.conftest import _login
 
 class TestLogin:
     def test_login_success(self, client, test_user):
