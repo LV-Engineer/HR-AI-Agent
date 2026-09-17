@@ -126,7 +126,7 @@ export default function AppShell() {
           <div className="min-w-0 flex-1 truncate text-[12.5px] font-medium text-foreground">
             {displayName}
           </div>
-          <button onClick={handleLogout} className="shrink-0 cursor-pointer text-muted-foreground hover:text-foreground">
+          <button onClick={handleLogout} aria-label="Вийти" className="shrink-0 cursor-pointer text-muted-foreground hover:text-foreground">
             <LogOut className="size-[15px]" />
           </button>
         </div>
