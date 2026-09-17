@@ -52,11 +52,6 @@ def get_embedding(text_input: str) -> list[float]:
 def main() -> None:
     with engine.begin() as conn:
         for vacancy in VACANCIES:
-            department_id = conn.execute(
-                text('SELECT id FROM staff.departments WHERE name = :name'),
-                {'name': vacancy['department']},
-            ).scalar_one()
-
             embedding = get_embedding(vacancy['content'])
             vector_literal = '[' + ','.join(str(x) for x in embedding) + ']'
             conn.execute(
@@ -67,7 +62,6 @@ def main() -> None:
                 {
                     'title': vacancy['title'],
                     'content': vacancy['content'],
-                    'department_id': department_id,
                     'embedding': vector_literal,
                 },
             )

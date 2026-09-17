@@ -6,6 +6,7 @@ CREATE TABLE documents.hr_policies (
     id         SERIAL PRIMARY KEY,
     title      TEXT NOT NULL,
     content    TEXT NOT NULL,
+    file_path  TEXT,
     embedding  vector(1024),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -14,7 +15,6 @@ CREATE TABLE documents.job_requirements (
     id            SERIAL PRIMARY KEY,
     title         TEXT NOT NULL,
     content       TEXT NOT NULL,
-    department_id INTEGER REFERENCES staff.departments(id),
     embedding     vector(1024),
     created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
