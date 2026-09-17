@@ -34,21 +34,19 @@ async def upload_cv(
             detail='Only PDF files are supported',
         )
 
-@router.get('/cv', response_model=list[CandidateCVResponse])
+@router.get('/cv', response_model=list[CandidateCVResponse], dependencies=[Depends(get_current_user)])
 @limiter.limit('10/minute')
 def list_cvs(
     request: Request,
-    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> list[CandidateCVResponse]:
     return CandidateService(db).list_cvs()
 
-@router.get('/cv/{cv_id}')
+@router.get('/cv/{cv_id}', dependencies=[Depends(get_current_user)])
 @limiter.limit('10/minute')
 def view_cv(
     request: Request,
     cv_id: uuid.UUID,
-    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> FileResponse:
     try:
@@ -62,12 +60,11 @@ def view_cv(
         content_disposition_type='inline',
     )
 
-@router.delete('/cv/{cv_id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/cv/{cv_id}', status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(get_current_user)])
 @limiter.limit('10/minute')
 def delete_cv(
     request: Request,
     cv_id: uuid.UUID,
-    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> None:
     try:

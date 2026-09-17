@@ -10,13 +10,12 @@ from app.services.policy import HrPolicyNotFoundError, PolicyService, Unsupporte
 
 router = APIRouter(prefix='/policies', tags=['policies'])
 
-@router.post('', response_model=HrPolicyResponse, status_code=status.HTTP_201_CREATED)
+@router.post('', response_model=HrPolicyResponse, status_code=status.HTTP_201_CREATED, dependencies=[Depends(get_current_user)])
 @limiter.limit('10/minute')
 async def upload_policy(
     request: Request,
     title: str = Form(...),
     file: UploadFile = File(...),
-    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> HrPolicyResponse:
     try:
@@ -31,21 +30,19 @@ async def upload_policy(
             detail='Only PDF files are supported',
         )
 
-@router.get('', response_model=list[HrPolicyResponse])
+@router.get('', response_model=list[HrPolicyResponse], dependencies=[Depends(get_current_user)])
 @limiter.limit('10/minute')
 def list_policies(
     request: Request,
-    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> list[HrPolicyResponse]:
     return PolicyService(db).list_policies()
 
-@router.get('/{policy_id}')
+@router.get('/{policy_id}', dependencies=[Depends(get_current_user)])
 @limiter.limit('10/minute')
 def view_policy(
     request: Request,
     policy_id: int,
-    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> FileResponse:
     try:
@@ -59,12 +56,11 @@ def view_policy(
         content_disposition_type='inline',
     )
 
-@router.delete('/{policy_id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/{policy_id}', status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(get_current_user)])
 @limiter.limit('10/minute')
 def delete_policy(
     request: Request,
     policy_id: int,
-    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> None:
     try:
