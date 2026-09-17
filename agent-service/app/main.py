@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request, Response
+from fastapi.middleware.cors import CORSMiddleware
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
@@ -9,10 +10,19 @@ from app.candidates.routes import router as candidates_router
 from app.policies.routes import router as policies_router
 from app.job_requirements.routes import router as job_requirements_router
 from app.reports.routes import router as reports_router
+from app.core.config import settings
 from app.core.rate_limit import limiter
 
 app = FastAPI(title='Agent-Service')
 app.state.limiter = limiter
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[settings.frontend_origin],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
 
 def rate_limit_handler(request: Request, exc: Exception) -> Response:
     assert isinstance(exc, RateLimitExceeded)
