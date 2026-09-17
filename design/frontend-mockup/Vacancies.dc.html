@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,500;0,600;1,500;1,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <style>
+    body { margin: 0; font-family: 'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: oklch(0.55 0.14 40); text-decoration: none; }
+    * { box-sizing: border-box; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-thumb { background: oklch(0.9 0.01 50); border-radius: 4px; }
+  </style>
+</helmet>
+
+<div style="display:flex; width:1440px; height:900px; background:oklch(0.98 0.01 60); overflow:hidden;">
+
+  <div style="display:flex; flex-direction:column; width:280px; flex-shrink:0; background:oklch(0.965 0.01 55); border-right:1px solid oklch(0.91 0.012 55); padding:26px 18px;">
+
+    <div style="font-family:'Newsreader', serif; font-style:italic; font-weight:600; font-size:20px; color:oklch(0.25 0.02 40); padding:0 4px;">Hirelume</div>
+    <div style="font-size:11.5px; font-weight:500; color:oklch(0.58 0.02 45); padding:2px 4px 24px;">People Analytics</div>
+
+    <div style="display:flex; flex-direction:column; gap:2px;">
+      <div style="display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:8px; cursor:pointer;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="oklch(0.5 0.02 45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span style="font-size:13.5px; font-weight:500; color:oklch(0.4 0.02 45);">Чат</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:8px; cursor:pointer;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="oklch(0.5 0.02 45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span style="font-size:13.5px; font-weight:500; color:oklch(0.4 0.02 45);">CV кандидатів</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:8px; cursor:pointer;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="oklch(0.5 0.02 45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span style="font-size:13.5px; font-weight:500; color:oklch(0.4 0.02 45);">HR-політики</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:8px; background:oklch(0.93 0.025 42); cursor:pointer;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="oklch(0.5 0.14 40)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        <span style="font-size:13.5px; font-weight:600; color:oklch(0.35 0.14 40);">Вакансії</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:8px; cursor:pointer;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="oklch(0.5 0.02 45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+        <span style="font-size:13.5px; font-weight:500; color:oklch(0.4 0.02 45);">Звіти</span>
+      </div>
+    </div>
+
+    <div style="flex-grow:1;"></div>
+
+    <div style="display:flex; align-items:center; gap:10px; padding-top:16px; margin-top:8px; border-top:1px solid oklch(0.91 0.012 55);">
+      <div style="width:30px; height:30px; border-radius:50%; background:oklch(0.55 0.14 40); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:white; flex-shrink:0;">ОК</div>
+      <div style="flex-grow:1; min-width:0;">
+        <div style="font-size:12.5px; font-weight:500; color:oklch(0.3 0.02 40); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">oksana.kravets</div>
+      </div>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="oklch(0.55 0.02 45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; cursor:pointer;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </div>
+  </div>
+
+  <div style="display:flex; flex-direction:column; width:340px; flex-shrink:0; border-right:1px solid oklch(0.93 0.012 55);">
+    <div style="display:flex; align-items:center; justify-content:space-between; height:60px; flex-shrink:0; padding:0 24px; border-bottom:1px solid oklch(0.93 0.012 55);">
+      <span style="font-size:14px; font-weight:600; color:oklch(0.3 0.02 40);">Вакансії</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="oklch(0.5 0.14 40)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+    <div style="flex-grow:1; overflow-y:auto; padding:14px;">
+      <div style="padding:13px 14px; border-radius:10px; background:oklch(0.93 0.025 42); margin-bottom:4px;">
+        <div style="font-size:13.5px; font-weight:600; color:oklch(0.32 0.02 40);">Backend Developer (Python)</div>
+        <div style="font-size:12px; color:oklch(0.58 0.02 45); margin-top:3px;">Розробка · оновлено 14 вер.</div>
+      </div>
+      <div style="padding:13px 14px; border-radius:10px; cursor:pointer;">
+        <div style="font-size:13.5px; font-weight:500; color:oklch(0.35 0.02 40);">HR-менеджер</div>
+        <div style="font-size:12px; color:oklch(0.6 0.02 45); margin-top:3px;">HR · оновлено 2 вер.</div>
+      </div>
+      <div style="padding:13px 14px; border-radius:10px; cursor:pointer;">
+        <div style="font-size:13.5px; font-weight:500; color:oklch(0.35 0.02 40);">Product Designer</div>
+        <div style="font-size:12px; color:oklch(0.6 0.02 45); margin-top:3px;">Продукт · оновлено 28 сер.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex; flex-direction:column; flex-grow:1; min-width:0;">
+
+    <div style="display:flex; align-items:center; justify-content:space-between; height:60px; flex-shrink:0; padding:0 36px; border-bottom:1px solid oklch(0.93 0.012 55);">
+      <span style="font-size:12.5px; color:oklch(0.58 0.02 45);">Редагування вакансії</span>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="padding:9px 18px; border-radius:100px; border:1px solid oklch(0.6 0.1 30); cursor:pointer;">
+          <span style="font-size:13px; font-weight:600; color:oklch(0.55 0.12 30);">Видалити</span>
+        </div>
+        <div style="padding:9px 20px; background:oklch(0.55 0.14 40); border-radius:100px; cursor:pointer;">
+          <span style="font-size:13px; font-weight:600; color:white;">Зберегти</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex-grow:1; overflow-y:auto; padding:32px 36px;">
+      <div style="max-width:620px;">
+
+        <div style="display:flex; flex-direction:column; gap:7px; margin-bottom:20px;">
+          <label style="font-size:12.5px; font-weight:500; color:oklch(0.4 0.02 45);">Назва вакансії</label>
+          <input type="text" value="Backend Developer (Python)" style="width:100%; font-family:inherit; font-size:16px; font-weight:600; color:oklch(0.28 0.02 40); background:white; border:1px solid oklch(0.87 0.012 50); border-radius:10px; padding:12px 15px; outline:none;">
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:7px;">
+          <label style="font-size:12.5px; font-weight:500; color:oklch(0.4 0.02 45);">Опис і вимоги (Markdown)</label>
+          <div style="width:100%; min-height:340px; font-family:inherit; font-size:14px; line-height:1.7; color:oklch(0.32 0.02 40); background:white; border:1px solid oklch(0.87 0.012 50); border-radius:10px; padding:16px 18px; white-space:pre-wrap;">## Про роль
+Шукаємо Backend-розробника з досвідом Python 3+ роки для команди платформи.
+
+**Обов'язкові навички:**
+- FastAPI або Django
+- PostgreSQL
+- Docker
+
+**Буде плюсом:**
+- Досвід з асинхронним програмуванням (asyncio)
+- Знання SQLAlchemy<span style="display:inline-block; width:2px; height:16px; background:oklch(0.55 0.14 40); margin-left:1px; vertical-align:middle;"></span></div>
+          <div style="font-size:12px; color:oklch(0.6 0.02 45); margin-top:2px;">Дані для підбору кандидатів оновлюються автоматично, тільки якщо змінено опис</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
