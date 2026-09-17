@@ -55,7 +55,7 @@ def _build_chart(data: list[dict[str, Any]], chart_type: Literal['bar', 'line', 
     return buffer
 
 def generate_report(title: str, data: list[dict[str, Any]], summary: str, chart_type: Literal['bar', 'line', 'none'] = 'bar') -> str:
-    filename = f"report_{datetime.now(timezone.utc):%Y%m%d_%H%M%S}.pdf"
+    filename = f"report_{datetime.now(timezone.utc):%Y-%m-%d_%H-%M-%S}.pdf"
     file_path = REPORTS_DIR / filename
 
     styles = getSampleStyleSheet()
