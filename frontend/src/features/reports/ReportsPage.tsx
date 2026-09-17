@@ -86,10 +86,10 @@ export default function ReportsPage() {
                     </div>
                   </td>
                   <td className="border-b border-border/60 px-1 py-3.5 text-right">
-                    <button onClick={() => handleView(report)} className="mr-3.5 cursor-pointer text-muted-foreground hover:text-foreground">
+                    <button onClick={() => handleView(report)} aria-label={`Переглянути звіт ${report.filename}`} className="mr-3.5 cursor-pointer text-muted-foreground hover:text-foreground">
                       <Eye className="size-[15px]" />
                     </button>
-                    <button onClick={() => setDeleteTarget(report)} className="cursor-pointer text-destructive/70 hover:text-destructive">
+                    <button onClick={() => setDeleteTarget(report)} aria-label={`Видалити звіт ${report.filename}`} className="cursor-pointer text-destructive/70 hover:text-destructive">
                       <Trash2 className="size-[15px]" />
                     </button>
                   </td>

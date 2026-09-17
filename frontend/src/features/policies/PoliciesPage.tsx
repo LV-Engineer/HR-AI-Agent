@@ -163,10 +163,10 @@ export default function PoliciesPage() {
                     {formatDateTime(policy.created_at)}
                   </td>
                   <td className="border-b border-border/60 px-1 py-3.5 text-right">
-                    <button onClick={() => handleView(policy)} className="mr-3.5 cursor-pointer text-muted-foreground hover:text-foreground">
+                    <button onClick={() => handleView(policy)} aria-label={`Переглянути політику ${policy.title}`} className="mr-3.5 cursor-pointer text-muted-foreground hover:text-foreground">
                       <Eye className="size-[15px]" />
                     </button>
-                    <button onClick={() => handleDelete(policy)} className="cursor-pointer text-destructive/70 hover:text-destructive">
+                    <button onClick={() => handleDelete(policy)} aria-label={`Видалити політику ${policy.title}`} className="cursor-pointer text-destructive/70 hover:text-destructive">
                       <Trash2 className="size-[15px]" />
                     </button>
                   </td>
