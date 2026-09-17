@@ -104,7 +104,7 @@ export default function JobRequirementsPage() {
       <div className="flex w-[340px] shrink-0 flex-col border-r border-border">
         <div className="flex h-[60px] shrink-0 items-center justify-between border-b border-border px-6">
           <span className="text-[14px] font-semibold text-foreground">Вакансії</span>
-          <button onClick={startNew} className="cursor-pointer text-primary hover:text-primary/80">
+          <button onClick={startNew} aria-label="Додати вакансію" className="cursor-pointer text-primary hover:text-primary/80">
             <Plus className="size-4" />
           </button>
         </div>
@@ -178,8 +178,9 @@ export default function JobRequirementsPage() {
                 {error && <div className="mb-4 text-[13px] text-destructive">{error}</div>}
 
                 <div className="mb-5 flex flex-col gap-1.5">
-                  <label className="text-[12.5px] font-medium text-muted-foreground">Назва вакансії</label>
+                  <label htmlFor="job-title" className="text-[12.5px] font-medium text-muted-foreground">Назва вакансії</label>
                   <input
+                    id="job-title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className="rounded-[10px] border border-border bg-card px-[15px] py-3 text-[16px] font-semibold text-foreground outline-none"
@@ -187,8 +188,9 @@ export default function JobRequirementsPage() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[12.5px] font-medium text-muted-foreground">Опис і вимоги (Markdown)</label>
+                  <label htmlFor="job-content" className="text-[12.5px] font-medium text-muted-foreground">Опис і вимоги (Markdown)</label>
                   <textarea
+                    id="job-content"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     rows={16}
