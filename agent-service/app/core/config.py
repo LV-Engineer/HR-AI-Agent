@@ -25,5 +25,6 @@ class Settings(BaseSettings):
     embedding_model: str = 'bge-m3'
     cv_storage_dir: str = '/app/storage/cv'
     policy_storage_dir: str = '/app/storage/policies'
+    reports_dir: str = '/app/storage/reports'
 
 settings = Settings()
