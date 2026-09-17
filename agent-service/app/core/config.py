@@ -24,5 +24,6 @@ class Settings(BaseSettings):
     ollama_url: str = 'http://ollama:11434'
     embedding_model: str = 'bge-m3'
     cv_storage_dir: str = '/app/storage/cv'
+    policy_storage_dir: str = '/app/storage/policies'
 
 settings = Settings()

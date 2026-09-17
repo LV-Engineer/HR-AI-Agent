@@ -19,3 +19,7 @@ storage/reports/*
 # Candidate CVs
 storage/cv/*
 !storage/cv/.gitkeep
+
+# HR policy documents
+storage/policies/*
+!storage/policies/.gitkeep

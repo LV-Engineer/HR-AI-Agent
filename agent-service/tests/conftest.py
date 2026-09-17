@@ -13,6 +13,7 @@ os.environ.setdefault('ACCESS_TOKEN_EXPIRE_MINUTES', '30')
 os.environ.setdefault('REFRESH_TOKEN_EXPIRE_DAYS', '30')
 os.environ.setdefault('ANTHROPIC_API_KEY', 'test-key-not-used')
 os.environ.setdefault('CV_STORAGE_DIR', tempfile.mkdtemp())
+os.environ.setdefault('POLICY_STORAGE_DIR', tempfile.mkdtemp())
 
 TEST_EMAIL = 'test.user@hirelume.dev'
 TEST_PASSWORD = 'password123'
