@@ -162,10 +162,10 @@ export default function CandidatesPage() {
                     {formatDateTime(cv.uploaded_at)}
                   </td>
                   <td className="border-b border-border/60 px-1 py-3.5 text-right">
-                    <button onClick={() => handleView(cv)} className="mr-3.5 cursor-pointer text-muted-foreground hover:text-foreground">
+                    <button onClick={() => handleView(cv)} aria-label={`Переглянути CV ${cv.candidate_name}`} className="mr-3.5 cursor-pointer text-muted-foreground hover:text-foreground">
                       <Eye className="size-[15px]" />
                     </button>
-                    <button onClick={() => handleDelete(cv)} className="cursor-pointer text-destructive/70 hover:text-destructive">
+                    <button onClick={() => handleDelete(cv)} aria-label={`Видалити CV ${cv.candidate_name}`} className="cursor-pointer text-destructive/70 hover:text-destructive">
                       <Trash2 className="size-[15px]" />
                     </button>
                   </td>
