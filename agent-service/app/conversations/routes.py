@@ -15,7 +15,7 @@ from app.conversations.service import ConversationService, ConversationNotFoundE
 router = APIRouter(prefix='/conversations', tags=['conversations'])
 
 @router.get('', response_model=list[ConversationSummary])
-@limiter.limit('10/minute')
+@limiter.limit('60/minute')
 def list_conversations(
     request: Request,
     user_id: str = Depends(get_current_user),
@@ -24,7 +24,7 @@ def list_conversations(
     return ConversationService(db).list_conversation(uuid.UUID(user_id))
 
 @router.get('/{conversation_id}/messages', response_model=list[MessageResponse])
-@limiter.limit('10/minute')
+@limiter.limit('60/minute')
 def get_conversation_messages(
     request: Request,
     conversation_id: uuid.UUID,
@@ -33,6 +33,19 @@ def get_conversation_messages(
 ) -> list[MessageResponse]:
     try:
         return ConversationService(db).get_messages(conversation_id, uuid.UUID(user_id))
+    except ConversationNotFoundError:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Conversation not found')
+
+@router.delete('/{conversation_id}', status_code=status.HTTP_204_NO_CONTENT)
+@limiter.limit('10/minute')
+def delete_conversation(
+    request: Request,
+    conversation_id: uuid.UUID,
+    user_id: str = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> None:
+    try:
+        ConversationService(db).delete_conversation(conversation_id, uuid.UUID(user_id))
     except ConversationNotFoundError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Conversation not found')
 

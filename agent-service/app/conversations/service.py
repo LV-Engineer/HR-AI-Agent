@@ -42,13 +42,20 @@ class ConversationService:
         self._db.commit()
         return conversation.id
 
+    def delete_conversation(self, conversation_id: uuid.UUID, user_id: uuid.UUID) -> None:
+        conversation = self._conversations.get_for_user(conversation_id, user_id)
+        if conversation is None:
+            raise ConversationNotFoundError()
+        self._conversations.delete(conversation)
+        self._db.commit()
+
     def build_history(self, conversation_id: uuid.UUID) -> list[dict[str, str]]:
         messages = self._messages.list_for_conversation(conversation_id)
         return [{'role': m.role, 'content': m.content} for m in messages]
 
     async def ask(self, conversation_id: uuid.UUID, question: str) -> AsyncIterator[dict[str, Any]]:
+        self.persist_user_message(conversation_id, question)
         messages = self.build_history(conversation_id)
-        messages.append({'role': 'user', 'content': question})
         async for event in ask_agent(messages):
             yield event
 
@@ -58,12 +65,17 @@ class ConversationService:
             if event['type'] == 'answer':
                 final_answer = event['content']
             yield event
-        self.persist_exchange(conversation_id, question, final_answer)
+        if final_answer:
+            self.persist_assistant_message(conversation_id, final_answer)
 
     @staticmethod
-    def persist_exchange(conversation_id: uuid.UUID, question: str, answer: str) -> None:
+    def persist_user_message(conversation_id: uuid.UUID, question: str) -> None:
         with SessionLocal() as db:
-            messages = MessageRepository(db)
-            messages.create(conversation_id, 'user', question, datetime.now(timezone.utc))
-            messages.create(conversation_id, 'assistant', answer, datetime.now(timezone.utc))
+            MessageRepository(db).create(conversation_id, 'user', question, datetime.now(timezone.utc))
+            db.commit()
+
+    @staticmethod
+    def persist_assistant_message(conversation_id: uuid.UUID, answer: str) -> None:
+        with SessionLocal() as db:
+            MessageRepository(db).create(conversation_id, 'assistant', answer, datetime.now(timezone.utc))
             db.commit()

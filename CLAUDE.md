@@ -141,11 +141,14 @@ associate a generated report with the conversation or user that produced it.
   `join_transaction_mode='create_savepoint'` and rolls back at teardown — commits inside application code
   become savepoints, invisible outside that one connection.
 - Most service/route code takes the injected session directly, so the plain `client`/`db_session` fixtures
-  are sufficient. The one exception is `ConversationService.persist_exchange`, a `@staticmethod` that opens
-  its own `SessionLocal()` (because it must still run after the SSE generator's request-scoped session may
-  have closed) — tests that exercise it need the `real_client`/`real_conversation_id` fixtures
-  (`tests/conversations/test_query_routes.py`, `tests/conversations/test_service.py`), which use genuinely
-  committed sessions plus explicit cleanup instead of rollback.
+  are sufficient. The one exception is `ConversationService.persist_user_message`/`persist_assistant_message`,
+  `@staticmethod`s that each open their own `SessionLocal()` (because they must still run after the SSE
+  generator's request-scoped session may have closed) — tests that exercise them need the
+  `real_client`/`real_conversation_id` fixtures (`tests/conversations/test_query_routes.py`,
+  `tests/conversations/test_service.py`), which use genuinely committed sessions plus explicit cleanup
+  instead of rollback. The user's message is persisted immediately, before calling `ask_agent`, precisely so
+  it survives a mid-stream client disconnect even though the assistant's answer (persisted only after the
+  stream completes) would not.
 - Patch a module-level function (e.g. `get_embedding`, `ask_agent`) where it's *imported into and called
   from*, not where it's defined — e.g. `monkeypatch.setattr(app.candidates.service, 'get_embedding', ...)`.
 

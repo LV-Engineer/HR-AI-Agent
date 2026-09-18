@@ -31,6 +31,9 @@ class ConversationRepository:
         self._db.flush()
         return conversation
 
+    def delete(self, conversation: Conversation) -> None:
+        self._db.delete(conversation)
+
 class MessageRepository:
     def __init__(self, db: Session) -> None:
         self._db = db

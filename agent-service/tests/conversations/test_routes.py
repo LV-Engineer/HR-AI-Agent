@@ -38,6 +38,38 @@ class TestListConversations:
         assert response.status_code == 401
 
 
+class TestDeleteConversation:
+    def test_deletes_own_conversation(self, client, test_user, db_session) -> None:
+        email, password = test_user
+        tokens = _login(client, email, password)
+        headers = {'Authorization': f'Bearer {tokens["access_token"]}'}
+        user_id = db_session.execute(
+            text('SELECT id FROM auth.users WHERE email = :email'), {'email': email}
+        ).scalar_one()
+        conversation = Conversation(user_id=user_id, title='To delete')
+        db_session.add(conversation)
+        db_session.commit()
+
+        response = client.delete(f'/conversations/{conversation.id}', headers=headers)
+
+        assert response.status_code == 204
+
+    def test_returns_404_for_unknown_conversation(self, client, test_user) -> None:
+        email, password = test_user
+        tokens = _login(client, email, password)
+
+        response = client.delete(
+            '/conversations/00000000-0000-0000-0000-000000000000',
+            headers={'Authorization': f'Bearer {tokens["access_token"]}'},
+        )
+
+        assert response.status_code == 404
+
+    def test_requires_authentication(self, client) -> None:
+        response = client.delete('/conversations/00000000-0000-0000-0000-000000000000')
+
+        assert response.status_code == 401
+
 class TestGetConversationMessages:
     def test_returns_messages_in_order(self, client, test_user, db_session) -> None:
         email, password = test_user
