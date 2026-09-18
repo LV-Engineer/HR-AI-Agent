@@ -7,7 +7,7 @@ import {
   type MessageResponse,
 } from '@/api/conversations'
 import { cn } from 'cn'
-import MarkdownMessage from '@/features/chat/MarkdownMessage'
+import MarkdownMessage from '@/components/MarkdownMessage'
 import ReportAttachment from '@/features/chat/ReportAttachment'
 import { cleanReportPaths, extractReportFilenames } from '@/features/chat/reportLinks'
 
@@ -107,9 +107,10 @@ export default function ChatPage() {
   return (
     <div className="flex h-full min-w-0 flex-col">
       <div className="flex-1 overflow-y-auto px-8 py-8">
-        <div className="mx-auto flex max-w-[680px] flex-col gap-8">
+        <div className="mx-auto flex min-h-full max-w-[680px] flex-col gap-8">
           {messages.length === 0 && !isStreaming && (
-            <div className="flex flex-1 flex-col items-center justify-center gap-8 py-20 text-center">
+            <div className="flex flex-1 flex-col items-center justify-center gap-8 text-center">
+              <img src="/logo-transaparent.png" alt="" className="size-14" />
               <div>
                 <div className="font-heading text-2xl font-semibold italic text-foreground">
                   Чим можу допомогти?

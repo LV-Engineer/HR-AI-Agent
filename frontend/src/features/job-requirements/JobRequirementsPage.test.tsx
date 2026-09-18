@@ -41,7 +41,7 @@ describe('JobRequirementsPage', () => {
     render(<JobRequirementsPage />)
 
     expect(await screen.findByDisplayValue('Backend Developer')).toBeInTheDocument()
-    expect(screen.getByDisplayValue('Шукаємо бекенд-розробника з досвідом Python.')).toBeInTheDocument()
+    expect(screen.getByText('Шукаємо бекенд-розробника з досвідом Python.')).toBeInTheDocument()
     expect(getJobRequirement).toHaveBeenCalledWith(1)
   })
 
@@ -100,6 +100,7 @@ describe('JobRequirementsPage', () => {
     const titleInput = await screen.findByDisplayValue('Backend Developer')
     await user.clear(titleInput)
     await user.type(titleInput, 'Senior Backend Developer')
+    await user.click(screen.getByRole('button', { name: 'Редагувати' }))
     await user.type(screen.getByLabelText('Опис і вимоги (Markdown)'), ' Плюс нове.')
     await user.click(screen.getByRole('button', { name: 'Зберегти' }))
 

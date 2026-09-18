@@ -12,12 +12,14 @@ import {
 import { formatDateTime } from '@/lib/format'
 import { cn } from 'cn'
 import ConfirmDialog from '@/components/ConfirmDialog'
+import MarkdownMessage from '@/components/MarkdownMessage'
 
 export default function JobRequirementsPage() {
   const [items, setItems] = useState<JobRequirementSummary[]>([])
   const [selectedId, setSelectedId] = useState<number | 'new' | null>(null)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [isEditingContent, setIsEditingContent] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -54,6 +56,7 @@ export default function JobRequirementsPage() {
       setSelectedId(item.id)
       setTitle(item.title)
       setContent(item.content)
+      setIsEditingContent(false)
     } catch {
       setError('Не вдалося завантажити вакансію')
     }
@@ -63,6 +66,7 @@ export default function JobRequirementsPage() {
     setSelectedId('new')
     setTitle('')
     setContent('')
+    setIsEditingContent(true)
     setError(null)
   }
 
@@ -195,14 +199,37 @@ export default function JobRequirementsPage() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="job-content" className="text-[12.5px] font-medium text-muted-foreground">Опис і вимоги (Markdown)</label>
-                  <textarea
-                    id="job-content"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    rows={16}
-                    className="rounded-[10px] border border-border bg-card px-[18px] py-4 text-[14px] leading-relaxed text-foreground outline-none"
-                  />
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="job-content" className="text-[12.5px] font-medium text-muted-foreground">
+                      Опис і вимоги (Markdown)
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setIsEditingContent((v) => !v)}
+                      className="cursor-pointer text-[12.5px] font-medium text-primary hover:text-primary/80"
+                    >
+                      {isEditingContent ? 'Переглянути' : 'Редагувати'}
+                    </button>
+                  </div>
+
+                  {isEditingContent ? (
+                    <textarea
+                      id="job-content"
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      rows={16}
+                      className="rounded-[10px] border border-border bg-card px-[18px] py-4 text-[14px] leading-relaxed text-foreground outline-none"
+                    />
+                  ) : (
+                    <div className="min-h-[340px] rounded-[10px] border border-border bg-card px-[18px] py-4 text-[15px] text-foreground">
+                      {content.trim() ? (
+                        <MarkdownMessage content={content} />
+                      ) : (
+                        <span className="text-[14px] text-muted-foreground">Немає опису</span>
+                      )}
+                    </div>
+                  )}
+
                   <div className="mt-0.5 text-xs text-muted-foreground">
                     Дані для підбору кандидатів оновлюються автоматично, тільки якщо змінено опис
                   </div>

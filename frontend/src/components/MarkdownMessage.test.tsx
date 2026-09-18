@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import MarkdownMessage from '@/features/chat/MarkdownMessage'
+import MarkdownMessage from '@/components/MarkdownMessage'
 
 describe('MarkdownMessage', () => {
   it('renders bold text and links', () => {
