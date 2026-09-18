@@ -17,7 +17,7 @@ class TestListConversations:
 
         other_user_id = db_session.execute(
             text("SELECT auth.create_user(:email, :password)"),
-            {'email': 'other.user@hirelume.dev', 'password': 'password123'},
+            {'email': 'other.user@hirelume.com', 'password': 'password123'},
         ).scalar_one()
 
         now = datetime.now(timezone.utc)

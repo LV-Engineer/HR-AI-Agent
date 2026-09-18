@@ -11,7 +11,7 @@ from app.core.db import get_db
 from app.main import app
 from tests.conftest import _login
 
-TEST_EMAIL = 'query.tester@hirelume.dev'
+TEST_EMAIL = 'query.tester@hirelume.com'
 TEST_PASSWORD = 'password123'
 
 @pytest.fixture
@@ -128,7 +128,7 @@ class TestQuery:
         with Session(engine) as session:
             other_user_id = session.execute(
                 text("SELECT auth.create_user(:email, :password)"),
-                {'email': 'other.query.tester@hirelume.dev', 'password': 'password123'},
+                {'email': 'other.query.tester@hirelume.com', 'password': 'password123'},
             ).scalar_one()
             other_conversation_id = session.execute(
                 text('INSERT INTO chat.conversations (user_id, title) VALUES (:user_id, :title) RETURNING id'),
@@ -147,7 +147,7 @@ class TestQuery:
         with Session(engine) as session:
             session.execute(
                 text('DELETE FROM auth.users WHERE email = :email'),
-                {'email': 'other.query.tester@hirelume.dev'},
+                {'email': 'other.query.tester@hirelume.com'},
             )
             session.commit()
 

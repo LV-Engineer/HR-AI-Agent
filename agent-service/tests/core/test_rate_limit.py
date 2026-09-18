@@ -13,7 +13,7 @@ def _make_request(headers: dict[str, str]) -> Request:
 
 class TestLoginRateLimit:
     def test_login_rate_limited_after_five_attempts(self, client) -> None:
-        payload = {'email': 'nobody.nowhere@hirelume.dev', 'password': 'wrong'}
+        payload = {'email': 'nobody.nowhere@hirelume.com', 'password': 'wrong'}
 
         for _ in range(5):
             response = client.post('/auth/login', json=payload)

@@ -21,7 +21,7 @@ class TestListConversation:
         user_id = _user_id(db_session, email)
         other_user_id = db_session.execute(
             text("SELECT auth.create_user(:email, :password)"),
-            {'email': 'other.conv@hirelume.dev', 'password': 'password123'},
+            {'email': 'other.conv@hirelume.com', 'password': 'password123'},
         ).scalar_one()
 
         now = datetime.now(timezone.utc)
@@ -61,7 +61,7 @@ class TestGetMessages:
         user_id = _user_id(db_session, email)
         other_user_id = db_session.execute(
             text("SELECT auth.create_user(:email, :password)"),
-            {'email': 'other.messages@hirelume.dev', 'password': 'password123'},
+            {'email': 'other.messages@hirelume.com', 'password': 'password123'},
         ).scalar_one()
         other_conversation = Conversation(user_id=other_user_id, title='Not yours')
         db_session.add(other_conversation)
@@ -142,7 +142,7 @@ class TestDeleteConversation:
         user_id = _user_id(db_session, email)
         other_user_id = db_session.execute(
             text("SELECT auth.create_user(:email, :password)"),
-            {'email': 'other.delete@hirelume.dev', 'password': 'password123'},
+            {'email': 'other.delete@hirelume.com', 'password': 'password123'},
         ).scalar_one()
         other_conversation = Conversation(user_id=other_user_id, title='Not yours')
         db_session.add(other_conversation)
@@ -172,7 +172,7 @@ def real_conversation_id(engine, monkeypatch: pytest.MonkeyPatch):
     with Session(engine) as session:
         user_id = session.execute(
             text("SELECT auth.create_user(:email, :password)"),
-            {'email': 'ask-persist.tester@hirelume.dev', 'password': 'password123'},
+            {'email': 'ask-persist.tester@hirelume.com', 'password': 'password123'},
         ).scalar_one()
         conversation = Conversation(user_id=user_id, title='Test')
         session.add(conversation)

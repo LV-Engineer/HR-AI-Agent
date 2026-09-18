@@ -6,7 +6,7 @@ from pathlib import Path
 
 os.environ.setdefault('DATABASE_URL', 'postgresql+psycopg://placeholder:placeholder@localhost:5432/placeholder')
 os.environ.setdefault('REDIS_URL', 'memory://')
-os.environ.setdefault('COMPANY_EMAIL_DOMAIN', 'hirelume.dev')
+os.environ.setdefault('COMPANY_EMAIL_DOMAIN', 'hirelume.com')
 os.environ.setdefault('JWT_SECRET_KEY', 'test-secret-key-not-for-production')
 os.environ.setdefault('JWT_ALGORITHM', 'HS256')
 os.environ.setdefault('ACCESS_TOKEN_EXPIRE_MINUTES', '30')
@@ -16,7 +16,7 @@ os.environ.setdefault('CV_STORAGE_DIR', tempfile.mkdtemp())
 os.environ.setdefault('POLICY_STORAGE_DIR', tempfile.mkdtemp())
 os.environ.setdefault('REPORTS_DIR', tempfile.mkdtemp())
 
-TEST_EMAIL = 'test.user@hirelume.dev'
+TEST_EMAIL = 'test.user@hirelume.com'
 TEST_PASSWORD = 'password123'
 
 import pytest

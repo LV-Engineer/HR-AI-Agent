@@ -18,12 +18,12 @@ class TestLogin:
         assert 'refresh_token' in body
 
     def test_login_wrong_password(self, client):
-        response = client.post('/auth/login', json={'email': 'test.user@hirelume.dev', 'password': 'wrong'})
+        response = client.post('/auth/login', json={'email': 'test.user@hirelume.com', 'password': 'wrong'})
 
         assert response.status_code == 401
 
     def test_login_unknown_email(self, client):
-        response = client.post('/auth/login', json={'email': 'nobody.nowhere@hirelume.dev', 'password': 'password123'})
+        response = client.post('/auth/login', json={'email': 'nobody.nowhere@hirelume.com', 'password': 'password123'})
 
         assert response.status_code == 401
 

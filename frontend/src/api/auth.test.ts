@@ -20,19 +20,19 @@ describe('api/auth', () => {
       mockResponse({ access_token: 'a', refresh_token: 'r', token_type: 'bearer' }),
     )
 
-    await login('oksana.kravets@hirelume.dev', 'secret')
+    await login('oksana.kravets@hirelume.com', 'secret')
 
     const [path, init] = vi.mocked(apiFetch).mock.calls[0]
     expect(path).toBe('/auth/login')
     expect(init?.method).toBe('POST')
     expect(JSON.parse(init?.body as string)).toEqual({
-      email: 'oksana.kravets@hirelume.dev',
+      email: 'oksana.kravets@hirelume.com',
       password: 'secret',
     })
   })
 
   it('getMe GETs /auth/me', async () => {
-    vi.mocked(apiFetch).mockResolvedValue(mockResponse({ id: '1', email: 'x@y.dev', created_at: '2026-01-01' }))
+    vi.mocked(apiFetch).mockResolvedValue(mockResponse({ id: '1', email: 'x@y.com', created_at: '2026-01-01' }))
     await getMe()
     expect(apiFetch).toHaveBeenCalledWith('/auth/me')
   })

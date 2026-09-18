@@ -44,7 +44,7 @@ describe('LoginPage', () => {
     const user = userEvent.setup()
     render(<LoginPage />)
 
-    await user.type(screen.getByLabelText('Робочий email'), 'oksana.kravets@hirelume.dev')
+    await user.type(screen.getByLabelText('Робочий email'), 'oksana.kravets@hirelume.com')
     await user.type(screen.getByLabelText('Пароль'), 'correct-password')
     await user.click(screen.getByRole('button', { name: 'Увійти' }))
 
@@ -58,7 +58,7 @@ describe('LoginPage', () => {
     const user = userEvent.setup()
     render(<LoginPage />)
 
-    await user.type(screen.getByLabelText('Робочий email'), 'oksana.kravets@hirelume.dev')
+    await user.type(screen.getByLabelText('Робочий email'), 'oksana.kravets@hirelume.com')
     await user.type(screen.getByLabelText('Пароль'), 'wrong-password')
     await user.click(screen.getByRole('button', { name: 'Увійти' }))
 

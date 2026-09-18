@@ -34,7 +34,7 @@ class TestLogin:
 
     def test_raises_for_unknown_email(self, db_session) -> None:
         with pytest.raises(InvalidCredentialsError):
-            AuthService(db_session).login('nobody.nowhere@hirelume.dev', 'password123')
+            AuthService(db_session).login('nobody.nowhere@hirelume.com', 'password123')
 
 class TestGetMe:
     def test_returns_user_for_valid_id(self, db_session, test_user) -> None:
