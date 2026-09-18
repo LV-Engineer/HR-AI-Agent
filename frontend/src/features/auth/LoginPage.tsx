@@ -69,7 +69,7 @@ export default function LoginPage() {
             <Input
               id="email"
               type="text"
-              placeholder="ім'я.прізвище@hirelume.dev"
+              placeholder="ім'я.прізвище@hirelume.com"
               className="h-auto rounded-[10px] px-[15px] py-3 text-[14.5px]"
               {...register('email')}
             />
