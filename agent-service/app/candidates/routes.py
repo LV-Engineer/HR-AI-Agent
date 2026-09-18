@@ -35,7 +35,7 @@ async def upload_cv(
         )
 
 @router.get('/cv', response_model=list[CandidateCVResponse], dependencies=[Depends(get_current_user)])
-@limiter.limit('10/minute')
+@limiter.limit('60/minute')
 def list_cvs(
     request: Request,
     db: Session = Depends(get_db),
@@ -43,7 +43,7 @@ def list_cvs(
     return CandidateService(db).list_cvs()
 
 @router.get('/cv/{cv_id}', dependencies=[Depends(get_current_user)])
-@limiter.limit('10/minute')
+@limiter.limit('60/minute')
 def view_cv(
     request: Request,
     cv_id: uuid.UUID,

@@ -24,7 +24,7 @@ def create_job_requirement(
     return JobRequirementService(db).create_job_requirement(payload.title, payload.content)
 
 @router.get('', response_model=list[JobRequirementSummary], dependencies=[Depends(get_current_user)])
-@limiter.limit('10/minute')
+@limiter.limit('60/minute')
 def list_job_requirements(
     request: Request,
     db: Session = Depends(get_db),
@@ -32,7 +32,7 @@ def list_job_requirements(
     return JobRequirementService(db).list_job_requirements()
 
 @router.get('/{job_requirement_id}', response_model=JobRequirementResponse, dependencies=[Depends(get_current_user)])
-@limiter.limit('10/minute')
+@limiter.limit('60/minute')
 def get_job_requirement(
     request: Request,
     job_requirement_id: int,

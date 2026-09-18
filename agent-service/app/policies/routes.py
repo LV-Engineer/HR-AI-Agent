@@ -31,7 +31,7 @@ async def upload_policy(
         )
 
 @router.get('', response_model=list[HrPolicyResponse], dependencies=[Depends(get_current_user)])
-@limiter.limit('10/minute')
+@limiter.limit('60/minute')
 def list_policies(
     request: Request,
     db: Session = Depends(get_db),
@@ -39,7 +39,7 @@ def list_policies(
     return PolicyService(db).list_policies()
 
 @router.get('/{policy_id}', dependencies=[Depends(get_current_user)])
-@limiter.limit('10/minute')
+@limiter.limit('60/minute')
 def view_policy(
     request: Request,
     policy_id: int,

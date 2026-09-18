@@ -9,12 +9,12 @@ from app.reports.schemas import ReportSummary
 router = APIRouter(prefix='/reports', tags=['reports'])
 
 @router.get('', response_model=list[ReportSummary], dependencies=[Depends(get_current_user)])
-@limiter.limit('10/minute')
+@limiter.limit('60/minute')
 def list_all_reports(request: Request) -> list[ReportSummary]:
     return [ReportSummary.model_validate(r._asdict()) for r in list_reports()]
 
 @router.get('/{filename}', dependencies=[Depends(get_current_user)])
-@limiter.limit('10/minute')
+@limiter.limit('60/minute')
 def view_report(request: Request, filename: str) -> FileResponse:
     try:
         file_path = resolve_report_path(filename)
