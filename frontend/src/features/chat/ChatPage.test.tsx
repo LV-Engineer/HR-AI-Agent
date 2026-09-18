@@ -85,4 +85,17 @@ describe('ChatPage', () => {
       await screen.findByText('Не вдалося отримати відповідь. Спробуйте ще раз.'),
     ).toBeInTheDocument()
   })
+
+  it('fills the input when a suggested question chip is clicked, without sending it', async () => {
+    const user = userEvent.setup()
+    render(<ChatPage />)
+
+    const chip = await screen.findByRole('button', { name: 'Яка середня зарплата по відділах?' })
+    await user.click(chip)
+
+    expect(screen.getByPlaceholderText(/Напишіть запитання/)).toHaveValue(
+      'Яка середня зарплата по відділах?',
+    )
+    expect(streamQuery).not.toHaveBeenCalled()
+  })
 })
