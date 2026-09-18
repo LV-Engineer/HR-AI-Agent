@@ -158,6 +158,7 @@ export default function JobRequirementsPage() {
                       const item = items.find((i) => i.id === selectedId)
                       if (item) setDeleteTarget(item)
                     }}
+                    aria-label="Видалити вакансію"
                     className="cursor-pointer rounded-lg border border-destructive/50 px-4.5 py-2 text-[13px] font-semibold text-destructive transition-colors hover:bg-destructive/10"
                   >
                     Видалити

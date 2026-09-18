@@ -2,7 +2,13 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import JobRequirementsPage from '@/features/job-requirements/JobRequirementsPage'
-import { listJobRequirements, getJobRequirement, createJobRequirement } from '@/api/job-requirements'
+import {
+  listJobRequirements,
+  getJobRequirement,
+  createJobRequirement,
+  updateJobRequirement,
+  deleteJobRequirement,
+} from '@/api/job-requirements'
 
 vi.mock('@/api/job-requirements', () => ({
   listJobRequirements: vi.fn(),
@@ -17,6 +23,8 @@ describe('JobRequirementsPage', () => {
     vi.mocked(listJobRequirements).mockReset()
     vi.mocked(getJobRequirement).mockReset()
     vi.mocked(createJobRequirement).mockReset()
+    vi.mocked(updateJobRequirement).mockReset()
+    vi.mocked(deleteJobRequirement).mockReset()
   })
 
   it('auto-selects and loads the first job requirement from the list', async () => {
@@ -65,7 +73,65 @@ describe('JobRequirementsPage', () => {
     await user.click(screen.getByRole('button', { name: 'Зберегти' }))
 
     expect(createJobRequirement).toHaveBeenCalledWith('QA Engineer', 'Досвід тестування')
-    expect(await screen.findByRole('button', { name: 'Видалити' })).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: 'Видалити вакансію' })).toBeInTheDocument()
     expect(screen.getByText('Редагування вакансії')).toBeInTheDocument()
+  })
+
+  it('saves edits to an existing job requirement', async () => {
+    vi.mocked(listJobRequirements).mockResolvedValue([
+      { id: 1, title: 'Backend Developer', created_at: '2026-09-14T10:00:00' },
+    ])
+    vi.mocked(getJobRequirement).mockResolvedValue({
+      id: 1,
+      title: 'Backend Developer',
+      content: 'Стара версія опису.',
+      created_at: '2026-09-14T10:00:00',
+    })
+    vi.mocked(updateJobRequirement).mockResolvedValue({
+      id: 1,
+      title: 'Senior Backend Developer',
+      content: 'Стара версія опису. Плюс нове.',
+      created_at: '2026-09-14T10:00:00',
+    })
+
+    const user = userEvent.setup()
+    render(<JobRequirementsPage />)
+
+    const titleInput = await screen.findByDisplayValue('Backend Developer')
+    await user.clear(titleInput)
+    await user.type(titleInput, 'Senior Backend Developer')
+    await user.type(screen.getByLabelText('Опис і вимоги (Markdown)'), ' Плюс нове.')
+    await user.click(screen.getByRole('button', { name: 'Зберегти' }))
+
+    expect(updateJobRequirement).toHaveBeenCalledWith(
+      1,
+      'Senior Backend Developer',
+      'Стара версія опису. Плюс нове.',
+    )
+  })
+
+  it('deletes a job requirement after confirming', async () => {
+    vi.mocked(listJobRequirements)
+      .mockResolvedValueOnce([{ id: 1, title: 'Backend Developer', created_at: '2026-09-14T10:00:00' }])
+      .mockResolvedValueOnce([])
+    vi.mocked(getJobRequirement).mockResolvedValue({
+      id: 1,
+      title: 'Backend Developer',
+      content: 'Опис вакансії.',
+      created_at: '2026-09-14T10:00:00',
+    })
+    vi.mocked(deleteJobRequirement).mockResolvedValue(undefined)
+
+    const user = userEvent.setup()
+    render(<JobRequirementsPage />)
+
+    await screen.findByDisplayValue('Backend Developer')
+    await user.click(screen.getByRole('button', { name: 'Видалити вакансію' }))
+
+    expect(screen.getByText('Видалити вакансію?')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Видалити' }))
+
+    expect(deleteJobRequirement).toHaveBeenCalledWith(1)
+    expect(await screen.findByText('Оберіть вакансію або створіть нову')).toBeInTheDocument()
   })
 })
