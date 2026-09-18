@@ -45,6 +45,14 @@ export default function ChatPage() {
   const [activeStep, setActiveStep] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const isMountedRef = useRef(true)
+
+  useEffect(() => {
+    isMountedRef.current = true
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
 
   useEffect(() => {
     if (!conversationId) {
@@ -86,7 +94,7 @@ export default function ChatPage() {
       setActiveStep(null)
       setMessages((prev) => [...prev, { role: 'assistant', content: answer }])
 
-      if (!conversationId && resultId) {
+      if (!conversationId && resultId && isMountedRef.current) {
         navigate(`/c/${resultId}`)
       }
     } catch {

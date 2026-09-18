@@ -71,6 +71,28 @@ describe('ChatPage', () => {
     expect(navigateMock).toHaveBeenCalledWith('/c/conv-new')
   })
 
+  it('does not navigate if the page was left before the stream for a new conversation finished', async () => {
+    let resolveAnswer!: () => void
+    const answerReady = new Promise<void>((r) => (resolveAnswer = r))
+
+    vi.mocked(streamQuery).mockImplementation(async function* (): AsyncGenerator<QueryEvent> {
+      await answerReady
+      yield { type: 'answer', content: 'Ось відповідь', conversation_id: 'conv-new' }
+    })
+
+    const user = userEvent.setup()
+    const { unmount } = render(<ChatPage />)
+
+    await user.type(screen.getByPlaceholderText(/Напишіть запитання/), 'Питання{Enter}')
+    unmount()
+
+    resolveAnswer()
+    // let the resumed async generator and the rest of handleSend's promise chain flush
+    await new Promise((resolve) => setTimeout(resolve, 0))
+
+    expect(navigateMock).not.toHaveBeenCalled()
+  })
+
   it('shows a generic error message when the stream fails', async () => {
     vi.mocked(streamQuery).mockImplementation(() => {
       throw new Error('network down')
