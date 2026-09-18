@@ -254,3 +254,27 @@ class TestAskAndPersist:
             ('user', 'A question'),
             ('assistant', 'The answer.'),
         ]
+
+    @pytest.mark.anyio
+    async def test_persists_a_fallback_message_when_the_agent_yields_no_final_text(
+        self, db_session, real_conversation_id, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # Mirrors app/core/agent.py: if the agent's last turn is a tool call with no
+        # accompanying text block, it yields an 'answer' event with empty content.
+        async def _fake_ask_agent(messages):
+            yield {'type': 'step', 'tool': 'generate_report'}
+            yield {'type': 'answer', 'content': ''}
+
+        monkeypatch.setattr(conversation_service_module, 'ask_agent', _fake_ask_agent)
+
+        async for _ in ConversationService(db_session).ask_and_persist(real_conversation_id, 'A question'):
+            pass
+
+        rows = db_session.execute(
+            text('SELECT role, content FROM chat.messages WHERE conversation_id = :id ORDER BY created_at'),
+            {'id': real_conversation_id},
+        ).all()
+        assert [(r.role, r.content) for r in rows] == [
+            ('user', 'A question'),
+            ('assistant', conversation_service_module.FALLBACK_ANSWER),
+        ]

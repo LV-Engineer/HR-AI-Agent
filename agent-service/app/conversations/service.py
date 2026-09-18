@@ -10,6 +10,7 @@ from app.conversations.repositories import ConversationRepository, MessageReposi
 from app.conversations.schemas import ConversationSummary, MessageResponse
 
 TITLE_MAX_LENGTH = 60
+FALLBACK_ANSWER = 'Не вдалося отримати відповідь від асистента.'
 
 class ConversationNotFoundError(Exception):
     pass
@@ -65,8 +66,7 @@ class ConversationService:
             if event['type'] == 'answer':
                 final_answer = event['content']
             yield event
-        if final_answer:
-            self.persist_assistant_message(conversation_id, final_answer)
+        self.persist_assistant_message(conversation_id, final_answer or FALLBACK_ANSWER)
 
     @staticmethod
     def persist_user_message(conversation_id: uuid.UUID, question: str) -> None:
