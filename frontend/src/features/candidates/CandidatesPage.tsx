@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { toast } from 'sonner'
 import { Upload, Eye, Trash2, Plus } from 'lucide-react'
 import { listCvs, uploadCv, viewCv, deleteCv, type CandidateCV } from '@/api/candidates'
 import { formatDateTime } from '@/lib/format'
@@ -40,8 +41,10 @@ export default function CandidatesPage() {
     try {
       await uploadCv(candidateName, file)
       await loadCvs()
+      toast.success('CV завантажено')
     } catch {
       setError('Не вдалося завантажити файл')
+      toast.error('Не вдалося завантажити файл')
     } finally {
       setIsUploading(false)
     }
@@ -72,8 +75,10 @@ export default function CandidatesPage() {
     try {
       await deleteCv(deleteTarget.id)
       setCvs((prev) => prev.filter((c) => c.id !== deleteTarget.id))
+      toast.success('CV видалено')
     } catch {
       setError('Не вдалося видалити файл')
+      toast.error('Не вдалося видалити файл')
     } finally {
       setDeleteTarget(null)
     }

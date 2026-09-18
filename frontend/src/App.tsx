@@ -8,10 +8,12 @@ import PoliciesPage from '@/features/policies/PoliciesPage'
 import JobRequirementsPage from '@/features/job-requirements/JobRequirementsPage'
 import ReportsPage from '@/features/reports/ReportsPage'
 import AppShell from '@/layouts/AppShell'
+import { Toaster } from '@/components/ui/sonner'
 
 export default function App() {
   return (
     <BrowserRouter>
+      <Toaster position="bottom-right" />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route element={<RequireAuth />}>

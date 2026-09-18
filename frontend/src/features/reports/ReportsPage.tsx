@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import { FileText, Eye, Trash2 } from 'lucide-react'
 import { listReports, viewReport, deleteReport, type ReportSummary } from '@/api/reports'
 import { formatDateTime } from '@/lib/format'
@@ -40,8 +41,10 @@ export default function ReportsPage() {
     try {
       await deleteReport(deleteTarget.filename)
       setReports((prev) => prev.filter((r) => r.filename !== deleteTarget.filename))
+      toast.success('Звіт видалено')
     } catch {
       setError('Не вдалося видалити звіт')
+      toast.error('Не вдалося видалити звіт')
     } finally {
       setDeleteTarget(null)
     }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import { Plus } from 'lucide-react'
 import {
   listJobRequirements,
@@ -76,12 +77,15 @@ export default function JobRequirementsPage() {
       if (selectedId === 'new') {
         const created = await createJobRequirement(title, content)
         await loadList(created.id)
+        toast.success('Вакансію створено')
       } else if (selectedId !== null) {
         await updateJobRequirement(selectedId, title, content)
         await loadList(selectedId)
+        toast.success('Вакансію збережено')
       }
     } catch {
       setError('Не вдалося зберегти вакансію')
+      toast.error('Не вдалося зберегти вакансію')
     } finally {
       setIsSaving(false)
     }
@@ -93,9 +97,11 @@ export default function JobRequirementsPage() {
       await deleteJobRequirement(deleteTarget.id)
       setDeleteTarget(null)
       await loadList()
+      toast.success('Вакансію видалено')
     } catch {
       setError('Не вдалося видалити вакансію')
       setDeleteTarget(null)
+      toast.error('Не вдалося видалити вакансію')
     }
   }
 

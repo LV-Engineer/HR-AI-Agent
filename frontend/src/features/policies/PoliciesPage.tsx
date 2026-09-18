@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { toast } from 'sonner'
 import { Upload, Eye, Trash2, Plus } from 'lucide-react'
 import { listPolicies, uploadPolicy, viewPolicy, deletePolicy, type HrPolicy } from '@/api/policies'
 import { ApiError } from '@/api/client'
@@ -41,8 +42,10 @@ export default function PoliciesPage() {
     try {
       await uploadPolicy(title, file)
       await loadPolicies()
+      toast.success('Політику завантажено')
     } catch {
       setError('Не вдалося завантажити файл')
+      toast.error('Не вдалося завантажити файл')
     } finally {
       setIsUploading(false)
     }
@@ -73,8 +76,10 @@ export default function PoliciesPage() {
     try {
       await deletePolicy(deleteTarget.id)
       setPolicies((prev) => prev.filter((p) => p.id !== deleteTarget.id))
+      toast.success('Політику видалено')
     } catch {
       setError('Не вдалося видалити політику')
+      toast.error('Не вдалося видалити політику')
     } finally {
       setDeleteTarget(null)
     }
