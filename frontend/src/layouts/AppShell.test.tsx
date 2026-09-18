@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import AppShell from '@/layouts/AppShell'
 import { getMe } from '@/api/auth'
-import { listConversations } from '@/api/conversations'
+import { listConversations, deleteConversation } from '@/api/conversations'
 import { getAccessToken, setTokens } from '@/lib/token-storage'
 
 vi.mock('@/api/auth', () => ({
@@ -13,6 +13,7 @@ vi.mock('@/api/auth', () => ({
 
 vi.mock('@/api/conversations', () => ({
   listConversations: vi.fn(),
+  deleteConversation: vi.fn(),
 }))
 
 function renderShell(initialPath: string) {
@@ -37,6 +38,7 @@ describe('AppShell', () => {
     localStorage.clear()
     vi.mocked(getMe).mockReset()
     vi.mocked(listConversations).mockReset()
+    vi.mocked(deleteConversation).mockReset()
   })
 
   it("shows the display name derived from the user's email and initials", async () => {
@@ -58,7 +60,7 @@ describe('AppShell', () => {
     renderShell('/c/conv-1')
 
     const conversationLink = await screen.findByRole('link', { name: 'Зарплати по відділах' })
-    expect(conversationLink.className).toContain('bg-accent')
+    expect(conversationLink.className).toContain('text-accent-foreground')
 
     const chatNavLink = screen.getByRole('link', { name: 'Чат' })
     expect(chatNavLink.className).toContain('bg-accent')
@@ -88,5 +90,34 @@ describe('AppShell', () => {
 
     expect(await screen.findByText('Login screen')).toBeInTheDocument()
     expect(getAccessToken()).toBeNull()
+  })
+
+  it('navigates to / when deleting the currently open conversation', async () => {
+    vi.mocked(getMe).mockResolvedValue(user)
+    vi.mocked(listConversations).mockResolvedValue([
+      { id: 'conv-1', title: 'Зарплати по відділах', created_at: '2026-09-16T14:22:30' },
+    ])
+    vi.mocked(deleteConversation).mockResolvedValue(undefined)
+
+    const userEventInstance = userEvent.setup()
+    render(
+      <MemoryRouter initialEntries={['/c/conv-1']}>
+        <Routes>
+          <Route element={<AppShell />}>
+            <Route path="/" element={<div>New chat screen</div>} />
+            <Route path="/c/:conversationId" element={<div>Existing chat screen</div>} />
+          </Route>
+        </Routes>
+      </MemoryRouter>,
+    )
+
+    await screen.findByText('Existing chat screen')
+    await userEventInstance.click(
+      screen.getByRole('button', { name: 'Видалити розмову Зарплати по відділах' }),
+    )
+    await userEventInstance.click(screen.getByRole('button', { name: 'Видалити' }))
+
+    expect(deleteConversation).toHaveBeenCalledWith('conv-1')
+    expect(await screen.findByText('New chat screen')).toBeInTheDocument()
   })
 })

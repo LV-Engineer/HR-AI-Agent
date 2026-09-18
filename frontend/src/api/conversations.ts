@@ -26,6 +26,10 @@ export async function getConversationMessages(conversationId: string): Promise<M
   return response.json()
 }
 
+export async function deleteConversation(conversationId: string): Promise<void> {
+  await apiFetch(`/conversations/${conversationId}`, { method: 'DELETE' })
+}
+
 export async function* streamQuery(
   question: string,
   conversationId: string | null,
