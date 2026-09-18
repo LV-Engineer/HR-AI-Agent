@@ -4,6 +4,18 @@ import { Upload, Eye, Trash2, Plus } from 'lucide-react'
 import { listCvs, uploadCv, viewCv, deleteCv, type CandidateCV } from '@/api/candidates'
 import { formatDateTime } from '@/lib/format'
 import ConfirmDialog from '@/components/ConfirmDialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 export default function CandidatesPage() {
   const [cvs, setCvs] = useState<CandidateCV[]>([])
@@ -12,6 +24,9 @@ export default function CandidatesPage() {
   const [isDragging, setIsDragging] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<CandidateCV | null>(null)
+  const [pendingFile, setPendingFile] = useState<File | null>(null)
+  const [candidateNameInput, setCandidateNameInput] = useState('')
+  const [nameError, setNameError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -30,24 +45,15 @@ export default function CandidatesPage() {
     }
   }
 
-  async function handleFile(file: File) {
+  function handleFile(file: File) {
     if (file.type !== 'application/pdf') {
       setError('Підтримуються лише PDF-файли')
       return
     }
     setError(null)
-    setIsUploading(true)
-    const candidateName = file.name.replace(/\.pdf$/i, '')
-    try {
-      await uploadCv(candidateName, file)
-      await loadCvs()
-      toast.success('CV завантажено')
-    } catch {
-      setError('Не вдалося завантажити файл')
-      toast.error('Не вдалося завантажити файл')
-    } finally {
-      setIsUploading(false)
-    }
+    setNameError(null)
+    setCandidateNameInput(file.name.replace(/\.pdf$/i, ''))
+    setPendingFile(file)
   }
 
   function handleDrop(e: React.DragEvent<HTMLDivElement>) {
@@ -55,6 +61,29 @@ export default function CandidatesPage() {
     setIsDragging(false)
     const file = e.dataTransfer.files[0]
     if (file) handleFile(file)
+  }
+
+  async function confirmUpload(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    const candidateName = candidateNameInput.trim()
+    if (!candidateName) {
+      setNameError("Введіть ім'я кандидата")
+      return
+    }
+    if (!pendingFile) return
+
+    setIsUploading(true)
+    try {
+      await uploadCv(candidateName, pendingFile)
+      await loadCvs()
+      toast.success('CV завантажено')
+      setPendingFile(null)
+    } catch {
+      setError('Не вдалося завантажити файл')
+      toast.error('Не вдалося завантажити файл')
+    } finally {
+      setIsUploading(false)
+    }
   }
 
   async function handleView(cv: CandidateCV) {
@@ -188,6 +217,44 @@ export default function CandidatesPage() {
         description={deleteTarget ? `CV кандидата "${deleteTarget.candidate_name}" буде видалено безповоротно.` : ''}
         onConfirm={confirmDelete}
       />
+
+      <AlertDialog
+        open={pendingFile !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setPendingFile(null)
+            setNameError(null)
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Перед завантаженням</AlertDialogTitle>
+            <AlertDialogDescription>
+              Вкажіть ім'я кандидата для файлу «{pendingFile?.name}».
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="grid gap-1.5">
+            <Label htmlFor="candidate-name">Ім'я кандидата</Label>
+            <Input
+              id="candidate-name"
+              value={candidateNameInput}
+              onChange={(e) => {
+                setCandidateNameInput(e.target.value)
+                setNameError(null)
+              }}
+              aria-invalid={nameError !== null}
+            />
+            {nameError && <div className="text-[13px] text-destructive">{nameError}</div>}
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Скасувати</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmUpload} disabled={isUploading}>
+              {isUploading ? 'Завантаження…' : 'Завантажити'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

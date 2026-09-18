@@ -17,10 +17,10 @@ describe('CandidatesPage upload flow', () => {
     vi.mocked(uploadCv).mockReset()
   })
 
-  it('uploads a selected PDF, deriving the candidate name from the filename', async () => {
+  it('asks for the candidate name (prefilled from the filename) before uploading', async () => {
     const uploadedCv: CandidateCV = {
       id: 'cv-1',
-      candidate_name: 'Ivan_Petrenko',
+      candidate_name: 'Іван Коваленко',
       uploaded_at: '2026-09-17T10:00:00',
     }
     vi.mocked(uploadCv).mockResolvedValue(uploadedCv)
@@ -35,11 +35,36 @@ describe('CandidatesPage upload flow', () => {
     const input = container.querySelector('input[type="file"]') as HTMLInputElement
     await user.upload(input, file)
 
-    expect(uploadCv).toHaveBeenCalledWith('Ivan_Petrenko', file)
-    expect(await screen.findByText('Ivan_Petrenko')).toBeInTheDocument()
+    const nameInput = await screen.findByLabelText("Ім'я кандидата")
+    expect(nameInput).toHaveValue('Ivan_Petrenko')
+
+    await user.clear(nameInput)
+    await user.type(nameInput, 'Іван Коваленко')
+    await user.click(screen.getByRole('button', { name: 'Завантажити' }))
+
+    expect(uploadCv).toHaveBeenCalledWith('Іван Коваленко', file)
+    expect(await screen.findByText('Іван Коваленко')).toBeInTheDocument()
   })
 
-  it('rejects a non-PDF file without calling uploadCv', async () => {
+  it('keeps the dialog open and shows an error when the name is cleared', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<CandidatesPage />)
+
+    await screen.findByText('Ще немає завантажених CV')
+
+    const file = new File(['%PDF-1.4'], 'Ivan_Petrenko.pdf', { type: 'application/pdf' })
+    const input = container.querySelector('input[type="file"]') as HTMLInputElement
+    await user.upload(input, file)
+
+    const nameInput = await screen.findByLabelText("Ім'я кандидата")
+    await user.clear(nameInput)
+    await user.click(screen.getByRole('button', { name: 'Завантажити' }))
+
+    expect(await screen.findByText("Введіть ім'я кандидата")).toBeInTheDocument()
+    expect(uploadCv).not.toHaveBeenCalled()
+  })
+
+  it('rejects a non-PDF file without opening the name dialog', async () => {
     const { container } = render(<CandidatesPage />)
 
     await screen.findByText('Ще немає завантажених CV')
@@ -51,6 +76,7 @@ describe('CandidatesPage upload flow', () => {
     fireEvent.change(input, { target: { files: [file] } })
 
     expect(await screen.findByText('Підтримуються лише PDF-файли')).toBeInTheDocument()
+    expect(screen.queryByLabelText("Ім'я кандидата")).not.toBeInTheDocument()
     expect(uploadCv).not.toHaveBeenCalled()
   })
 })
