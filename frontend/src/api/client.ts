@@ -1,3 +1,4 @@
+import { toast } from 'sonner'
 import { clearTokens, getAccessToken, getRefreshToken, setTokens } from '@/lib/token-storage'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
@@ -52,6 +53,10 @@ async function refreshAccessToken(): Promise<string> {
 }
 
 async function toApiResult(response: Response): Promise<Response> {
+  if (response.status === 429) {
+    toast.error('Забагато запитів. Зачекайте трохи і спробуйте ще раз.', { id: 'rate-limit' })
+  }
+
   if (!response.ok) {
     const body = await response.json().catch(() => null)
     throw new ApiError(response.status, body?.detail ?? 'Помилка запиту')

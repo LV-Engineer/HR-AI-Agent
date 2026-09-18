@@ -1,6 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { toast } from 'sonner'
 import { apiFetch, ApiError } from '@/api/client'
 import { getAccessToken, setTokens } from '@/lib/token-storage'
+
+vi.mock('sonner', () => ({
+  toast: { error: vi.fn(), success: vi.fn() },
+}))
 
 function jsonResponse(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
@@ -12,6 +17,7 @@ function jsonResponse(status: number, body: unknown): Response {
 describe('apiFetch', () => {
   beforeEach(() => {
     localStorage.clear()
+    vi.mocked(toast.error).mockClear()
     vi.stubGlobal('fetch', vi.fn())
     Object.defineProperty(window, 'location', {
       configurable: true,
@@ -86,5 +92,17 @@ describe('apiFetch', () => {
 
     expect(getAccessToken()).toBeNull()
     expect(window.location.assign).toHaveBeenCalledWith('/login')
+  })
+
+  it('shows a rate-limit toast on a 429 response', async () => {
+    setTokens('access-1', 'refresh-1')
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(429, { detail: 'Too Many Requests' }))
+
+    await expect(apiFetch('/candidates/cv')).rejects.toThrow(ApiError)
+
+    expect(toast.error).toHaveBeenCalledWith(
+      'Забагато запитів. Зачекайте трохи і спробуйте ще раз.',
+      { id: 'rate-limit' },
+    )
   })
 })
