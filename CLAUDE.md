@@ -37,9 +37,10 @@ docker-compose up --build
 `agent-service` on :8000, `mcp-server` on :8001 (only for the MCP protocol endpoint, not a browsable API),
 Postgres on :5432, Ollama on :11434.
 
-Seeding (`db/seed/`, own `uv` venv): `uv run python seed_staff.py`, `seed_documents.py` (HR policies),
-`seed_candidate_cv.py`, `seed_job_requirements.py`. These insert directly with admin Postgres credentials
-and call Ollama for embeddings — they are not part of any API flow.
+Seeding (`db/seed/`, own `uv` venv): `uv run python seed_staff.py` populates the `staff` schema (employees,
+salaries, departments, vacations) with fake org data. It inserts directly with admin Postgres credentials
+and is not part of any API flow. (Earlier one-off seed scripts for policies/CVs/job requirements were
+removed once the app's own upload flows — which also generate real Ollama embeddings — covered that data.)
 
 `db/init/*.sql` only runs once, when the Postgres container's data volume is first created
 (`docker-entrypoint-initdb.d`). Editing these files does nothing for an already-initialized local
@@ -126,6 +127,13 @@ JWT access token (short-lived) + opaque refresh token, hashed (`hash_refresh_tok
 storage. Refresh tokens carry a `family_id`; reusing an already-rotated refresh token revokes the entire
 family (theft detection) rather than just rejecting the one token.
 
+There is no self-registration endpoint. Users are created directly in Postgres via the
+`auth.create_user(email, password)` SQL function (`db/init/02_schema_auth.sql`), which bcrypt-hashes the
+password itself. `LoginRequest.email` (`agent-service/app/auth/schemas.py`) is validated against
+`^[a-z]+\.[a-z]+@{COMPANY_EMAIL_DOMAIN}$` — format-only, not domain ownership — chosen so a display name
+can always be derived from the email client-side (`frontend/src/layouts/AppShell.tsx`) without a separate
+profile field.
+
 ### Chat / SSE
 
 `POST /query` streams Server-Sent Events (`agent-service/app/conversations/routes.py`). The frontend must
@@ -154,9 +162,30 @@ associate a generated report with the conversation or user that produced it.
 
 ## Frontend
 
-Not yet built. Planned: React + Vite + TypeScript + Tailwind + shadcn/ui. Design mockups (Login + Chat with
-conversation sidebar) already exist in `design/frontend-mockup/*.dc.html`, published as a Claude Design
-canvas Artifact; `canvas.json` is only that canvas tool's layout manifest (artboard positions/pages), not
-consumed by application code — pull colors/typography/structure from the `.dc.html` files themselves when
-building components. The mockups cover only login/chat; none of the CV/policy/job-requirement/report CRUD
-surface has a designed UI yet.
+React 19 + Vite + TypeScript, Tailwind CSS v4, shadcn/ui (Radix UI primitives). Built, not just planned —
+covers auth, chat, and full CRUD for candidates/policies/job-requirements/reports.
+
+`src/features/<domain>/` (`auth`, `chat`, `candidates`, `policies`, `job-requirements`, `reports`) mirrors
+the backend's domain split; `src/api/<domain>.ts` holds one typed `fetch` wrapper module per domain, all
+built on `src/api/client.ts`'s `apiFetch` — which owns 401-triggered token refresh (deduped via a
+module-level `refreshPromise` so concurrent requests share one in-flight refresh instead of racing each
+other into a theft-detection token-family revocation) and a 429 rate-limit toast. `src/layouts/AppShell.tsx`
+is the sidebar/nav shell; it derives the displayed user name and avatar initials from the login email
+client-side (`oksana.kravets@...` → "Oksana Kravets" / "OK") rather than a separate profile field, matching
+the email-format constraint in auth (see Auth above).
+
+`ChatPage` consumes `POST /query`'s SSE stream directly with `fetch` (see Chat/SSE above), guards the
+post-stream `navigate()` behind an `isMountedRef` so leaving the page mid-stream doesn't yank the user back
+into a conversation they left, and renders assistant messages through `MarkdownMessage`
+(`src/components/`, shared with the job-requirement editor's preview toggle).
+
+Testing: Vitest + React Testing Library. `src/test/setup.ts` centralizes jsdom gaps the default config
+doesn't cover — `@testing-library/jest-dom/vitest` (not the global-relying default export, since
+`test.globals` is off), an explicit `afterEach(() => cleanup())` (RTL's automatic registration silently
+no-ops without `test.globals: true`), and a `scrollIntoView` stub (unimplemented in jsdom, used by
+`ChatPage`'s auto-scroll). `userEvent.upload()` respects the target `<input accept="...">` and silently
+filters non-matching files — tests for the app's own client-side type validation use `fireEvent.change`
+instead to bypass that.
+
+No design-mockup files remain in the repo; the built UI diverged from the original login/chat-only
+mockups as the rest of the CRUD surface was designed directly in code.
