@@ -9,6 +9,10 @@ and a full React frontend around it.
 The app is HR-only — there is no role-based access control. Every authenticated user can see all
 candidates, policies, job requirements, reports, and their own chat history.
 
+## Demo
+
+[Watch the demo video](https://drive.google.com/file/d/1_kDUnSVPpOMT931_TJQenoodZrDnkmCb/view?usp=sharing)
+
 ## Tech Stack
 
 **Backend**
